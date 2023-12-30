@@ -123,7 +123,7 @@ class Bloch_Scatter:
             rgb_list = np.append(rgb_list, 
                                  [pixel_points[i+1][1]*255], 
                                  axis = 0
-                        )
+                       )
 
         rgb_list = rgb_list.astype(int)
         rgb_list = tuple(map(tuple, rgb_list))
