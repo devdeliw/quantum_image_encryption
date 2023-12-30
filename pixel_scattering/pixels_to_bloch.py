@@ -66,6 +66,17 @@ class Bloch_Scatter:
 
             points.append((x, y, z))
 
+        """
+        points_valid = True
+        for i in points: 
+            norm = math.sqrt(i[0]**2 + i[1]**2 + i[2]**2)
+            if norm < 0.99999999999: 
+                points_valid = False
+
+        if points_valid == False:
+            raise ValueError('Vectors on Bloch Sphere do not have a norm of 1')
+        """
+
         pixel_values = self.get_pixels()
 
         pixel_points = np.array([           # Define 2D Matrix 
@@ -101,7 +112,7 @@ class Bloch_Scatter:
 
         return pixel_points
 
-    def decrypt(self, file_name):
+    def image_from_sphere(self, file_name):
 
         """
         Creates Image from Pixel Positions on Bloch Sphere
@@ -109,13 +120,24 @@ class Bloch_Scatter:
         Parameters: 
         -----------
         file_name : String
-        name of decrypted file without extension
+        name of decrypted file with extension
         
         """
         
         pixel_points = self.fibonacci_sphere()
         im = Image.open(self.image_path, 'r')
         im = im.convert("RGB")
+
+        # Ensure `pixel_points` is y-decreasing
+        # -------------------------------------
+        y_points = np.array([])
+        for i in pixel_points:
+            y_points = np.append(y_points, [i[0][1]], axis = 0)
+
+        y_check = np.sort(y_points)[::-1]
+        if np.array_equal(y_points, y_check) != True:
+            raise ValueError('`pixel_points` not y-decreasing')
+        # -----------------------------------------------------
         
         rgb_list = np.array([pixel_points[0][1]*255])
 
@@ -130,15 +152,15 @@ class Bloch_Scatter:
 
         image_final = Image.new(im.mode, im.size)
         image_final.putdata(rgb_list)
-        image_final.save(f"{file_name}.png")
+        image_final.save(f"{file_name}")
 
         return
 
-"""
+
 im = Bloch_Scatter(image_path = "/Users/devaldeliwala/desktop/bracket.png", 
-                   show_sphere = True
+                   show_sphere = False
 )
-im.decrypt("final2")
-"""
+im.image_from_sphere('output.png')
+
 
 
