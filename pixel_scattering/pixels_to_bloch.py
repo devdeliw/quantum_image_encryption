@@ -30,9 +30,11 @@ class Bloch_Scatter:
         im = Image.open(self.image_path, 'r')
         imrgb = im.convert("RGB")
 
+        n_pixels = np.array(Image.open(self.image_path)).shape[0]**2
+
         pixel_values = np.array(list(imrgb.getdata()))/255
 
-        return pixel_values
+        return pixel_values, n_pixels
 
     def fibonacci_sphere(self):
 
@@ -46,11 +48,8 @@ class Bloch_Scatter:
         If `True`, show fibonacci sphere
 
         """
-
-        im = np.array(Image.open(self.image_path))
-        
-        n_pixels_width = im.shape[0]
-        n_pixels = n_pixels_width**2
+        pixel_values, n_pixels = self.get_pixels()
+        n_pixels_width = math.sqrt(n_pixels)
 
         points = []
         phi = math.pi * (math.sqrt(5) - 1)          # golden angle
@@ -77,8 +76,6 @@ class Bloch_Scatter:
             raise ValueError('Vectors on Bloch Sphere do not have a norm of 1')
         """
 
-        pixel_values = self.get_pixels()
-
         pixel_points = np.array([           # Define 2D Matrix 
             [points[0], pixel_values[0]]    # Initialize Matrix   
         ])
@@ -90,6 +87,8 @@ class Bloch_Scatter:
             )       
                     # [[point on Fibonacci sphere, pixel RGB value], ...]]
                     # Top-Left pixel at (0, 1, 0)
+
+        print(pixel_points)
 
         if self.show_sphere == True:
             fig = plt.figure()
@@ -108,7 +107,7 @@ class Bloch_Scatter:
             ax.set_zlabel('$z$')
 
             plt.show()
-            print(len(pixel_points))
+            print(f"{len(pixel_points)} total pixels")
 
         return pixel_points
 
@@ -124,7 +123,7 @@ class Bloch_Scatter:
         
         """
         
-        pixel_points = self.fibonacci_sphere()
+        pixel_points = self.align_bloch()
         im = Image.open(self.image_path, 'r')
         im = im.convert("RGB")
 
@@ -156,11 +155,42 @@ class Bloch_Scatter:
 
         return
 
+    def align_bloch(self): 
 
-im = Bloch_Scatter(image_path = "/Users/devaldeliwala/desktop/bracket.png", 
+        """
+        Realigns given pixel-rgb list so that it is y-decreasing
+        (0, 1, 0) --> (0, -1, 0)
+        """
+        
+        pixel_points = self.fibonacci_sphere()
+        pixel_values, n_pixels = self.get_pixels()
+        
+        # getting just the y-coordinates for each RGB pixel position
+        pixel_y_values = np.array([])
+        for i in range(len(pixel_points)):
+            pixel_y_values = np.append(pixel_y_values, pixel_points[i][0][1])
+
+        # reverse sorting them (y-decreasing)
+        ordered_indices = np.flip(np.argsort(pixel_y_values))
+        ordered_pixel_points = np.empty(shape = (n_pixels, 2, 3))
+
+        # making new pixel_points matrix sorted y-decreasing
+        index = 0 
+        for i in ordered_indices: 
+            ordered_pixel_points[index] = pixel_points[i]
+            index += 1
+
+        return ordered_pixel_points
+
+
+
+
+
+
+im = Bloch_Scatter(image_path = "/Users/devaldeliwala/desktop/test.png", 
                    show_sphere = False
 )
-im.image_from_sphere('output.png')
+im.image_from_sphere('output3.png')
 
 
 
