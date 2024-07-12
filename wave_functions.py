@@ -1,21 +1,24 @@
 from generate_sphere import * 
 
-from qiskit import QuantumCircuit,, Aer, transpile
+from qiskit import QuantumCircuit
+from qiskit_aer import Aer
 from qiskit.quantum_info import Statevector, DensityMatrix, random_statevector, partial_trace
 from qiskit.circuit.random import random_circuit
-from qiskit.compiler import transpiler
+from qiskit.compiler import transpile
 
 from scipy.linalg import sqrtm
 
+import numpy as np
 import secrets, time, uuid, hashlib
 
 class Scramble_WaveFunctions: 
 
-	def __init__(self, image_path, n, verbose): 
+	def __init__(self, image_path, n, depth, verbose): 
 
 		self.image_path = image_path
-		self.verbose = verbose
+		self.depth = depth
 		self.n = n
+		self.verbose = verbose
 
 	def define_wave_functions(self): 
 
@@ -50,7 +53,7 @@ class Scramble_WaveFunctions:
 
 		return groups 
 
-	def generate_circuits(self, depth = 10): 
+	def generate_circuits(self): 
 
 		groups = self.group_wave_functions()
 		self.wave_functions = groups
@@ -73,7 +76,7 @@ class Scramble_WaveFunctions:
 			# generate a randomized circuit of a certain depth using 
 			# our generated seed
 			seed = generate_seed() 
-			circuit = random_circuit(num_wave_functions, depth = depth, seed = seed)
+			circuit = random_circuit(num_wave_functions, depth = self.depth, seed = seed)
 
 			circuits.append(circuit)
 			seeds.append(seed)
@@ -153,8 +156,8 @@ class Scramble_WaveFunctions:
 
 		# converts the resultant pure states into their density matrices
 		for i in final_wave_functions: 
-
 			coupled_density_matrices = [] 
+
 			for j in range(len(i)): 
 				coupled_density_matrices.append(DensityMatrix(i[j][0]))
 
@@ -308,6 +311,7 @@ class Scramble_WaveFunctions:
 
 		# extracting all the zero eigenvalues that represent impossible states
 		# to retrieve upon measurement
+		non_zero_eigenvalue_idxs = []
 		for eigenlist in eigenvalues: 
 			non_zero_eigenvalue_idxs.append(np.where(eigenlist[0] > 1e-10)[0])
 
@@ -340,7 +344,6 @@ class Scramble_WaveFunctions:
 			single_qubit_density_matrix = partial_trace(statevector, [i for i in range(self.n - 1)])
 			eigenvalues, eigenvectors = np.linalg.eigh(single_qubit_density_matrix.data)
 
-			sorted_eigenvalues = np.array(eigenvalues)[np.argsort(eigenvalues)]
 			sorted_eigenvectors = np.array(eigenvectors)[np.argsort(eigenvalues)]
 
 			return Statevector(sorted_eigenvectors[0])
