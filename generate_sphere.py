@@ -1,9 +1,11 @@
 from PIL import Image
+from scipy.spatial import cKDTree 
+from scipy.interpolate import griddata, Rbf
+
 import numpy as np 
 import math 
 import matplotlib.pyplot as plt
-from scipy.spatial import cKDTree 
-from scipy.interpolate import griddata, Rbf
+
 
 class Sphere: 
 
