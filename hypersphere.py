@@ -25,6 +25,7 @@ class Hypersphere:
 	to print out information regarding the image and statevectors
 	generated 
 
+
 	Methods: 
 	--------
 
@@ -53,10 +54,13 @@ class Hypersphere:
 
 	def get_pixels(self): 
 
+		# load image
 		im = Image.open(self.image_path, mode = 'r')
 		image = im.convert('RGB')
+
 		width, height = image.size
 
+		# [(r, g, b), ...]
 		pixel_values = np.array(list(image.getdata()))
 
 		return pixel_values, width, height
@@ -65,14 +69,14 @@ class Hypersphere:
 
 		pixel_values, width, height = self.get_pixels()
 
-		def rgb_to_decimal(r, g, b):
+		def rgb_to_int(r, g, b):
 
 		    return (r << 16) + (g << 8) + b
 
 		int_values = []
 
 		for r, g, b in pixel_values: 
-			int_values.append(rgb_to_decimal(r, g, b))
+			int_values.append(rgb_to_int(r, g, b))
 		int_values = np.array(int_values)
 
 		return int_values
@@ -87,6 +91,8 @@ class Hypersphere:
 			groups.append(int_values[i:i + 2**self.n])
 			i += 2**self.n
 
+		# converts 2^n dimensional arrays filled with ints
+		# to unit vectors defining a hypersphere
 		def to_unit_vector(arr):
 
 		    magnitude = np.linalg.norm(arr)
@@ -111,6 +117,8 @@ class Hypersphere:
 
 		unit_vector_groups, magnitudes = self.hypersphere()
 
+		# reversibly converts 2^n dimensional unit vectors
+		# to n-dimensional statevectors
 		def unit_vector_to_statevector(unit_vector):
 
 		    dim = len(unit_vector) // 2
@@ -125,13 +133,54 @@ class Hypersphere:
 		for i in unit_vector_groups: 
 			statevectors.append(unit_vector_to_statevector(i))
 
+		# statevector object from qiskit.quantum_info
 		statevectors = [Statevector(i) for i in statevectors]
 
 		return statevectors, magnitudes
 
 class Inverse_Hypersphere: 
 
+	"""
+	Converts the outputted wavefunctions/statevectors from Hypersphere() 
+	back into the original image
 
+	Parameters: 
+	-----------
+
+	width, height	: int
+	width and height of image
+
+	statevectors	: array-like 
+	list of n-dimensional statevectors that together store the information 
+	of a digital image 
+
+	magnitudes		: array-like 
+	list of the normalization magnitudes that converted the 2^n dimensional vectors 
+	into 2^n dimensional unit vectors 
+
+	name			: str
+	name of outputted image 
+
+	name			: save_image_path
+	location of directory to store reconstructed image
+
+
+	Methods:
+	--------
+
+	def recover_hypersphere(self): 
+		recovers the 2^n dimensional unit vectors that define the hypersphere
+		from the statevectors parameter
+
+	def recover_pixels(self): 
+		recovers the pixel (R,G,B) information from the 2^n dimensional unit
+		vectors
+
+	def recover_image(self): 
+		generates reconstructed image using the outputted pixel information
+		saves the reconstructed image to save_image_path parameter
+
+	"""
 
 	def __init__(self, width, height, statevectors, magnitudes, name, save_image_path): 
 
@@ -144,6 +193,8 @@ class Inverse_Hypersphere:
 
 	def recover_hypersphere(self): 
 
+		# converts the n-dimensional statevectors back into 
+		# 2^n dimensional unit vectors
 		def statevector_to_unit_vector(statevector):
 		    real_parts = np.real(statevector)
 		    imag_parts = np.imag(statevector)
@@ -169,6 +220,9 @@ class Inverse_Hypersphere:
 
 		    return r, g, b
 
+		# converts the unit vectors back into their original 
+		# 2^n dimensional integer arrays using the stored normalization
+		# magnitudes
 		int_vectors = []
 		for i in range(len(recovered_unit_vectors)): 
 			int_vectors.append(recovered_unit_vectors[i] * self.magnitudes[i])
@@ -177,8 +231,9 @@ class Inverse_Hypersphere:
 		for i in int_vectors: 
 			for j in i: 
 				recovered_int_values.append(j)
-		recovered_int_values = np.array(recovered_int_values)
 
+		# recovers the (R,G,B) pixel information from the n-dimensional 
+		# int vectors
 		recovered_pixel_values = []
 		for i in recovered_int_values: 
 			recovered_pixel_values.append(decimal_to_rgb(int(i)))
@@ -196,6 +251,12 @@ class Inverse_Hypersphere:
 		reconstructed_image.save(f'{self.save_image_path}{self.name}_reconstructed.png')
 
 		return 
+
+
+
+#----------------------------------------------------#
+
+
 
 HypersphereClass = Hypersphere(n = 6, image_path = "images/el_primo_rectangle.jpeg")
 pixel_values, width, height = HypersphereClass.get_pixels()
