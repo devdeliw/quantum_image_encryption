@@ -11,7 +11,7 @@ NEQR's qubit requirement is very large however, requiring $n^2 + q-1$ qubits, fo
 NEQR's digital image representation are required to encrypt color images. 
 
 This project aims to generate a quantum algorithm that, for now, requires only
-$\left \frac{n^2}{2^m} \right \times (m-1)$ qubits to fully encrypt a color image, where $m$ is some integer. In the future I will attempt
+$\left( \frac{n^2}{2^m} \right) \times (m-1)$ qubits to fully encrypt a color image, where $m$ is some integer. In the future I will attempt
 to reduce the qubit requirement based on the receiver's demand for
 image-quality.
 
