@@ -29,8 +29,7 @@ are some preliminary results though:
 
 Encrypting this 64x64 (4096px) image took 149.5 seconds -- quite slow. However,
 the qubit requirement was only 119 (against NEQR's 4164 qubit requirement).
-This is a vast improvement and the algorithm efficiency will only get faster as
-I improve it.
+This is a vast improvement and the algorithm efficiency will only get faster.
 
 
 
