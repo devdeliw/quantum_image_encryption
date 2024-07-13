@@ -117,12 +117,12 @@ class Hypersphere:
 
         return unit_vector_groups, magnitudes
 
-    def statevectors(self): 
+    def generate_statevectors(self): 
 
         unit_vector_groups, magnitudes = self.group()
 
         # reversibly converts 2^n dimensional unit vectors
-        # to n-dimensional statevectors
+        # to n-1 dimensional statevectors
         def unit_vector_to_statevector(unit_vector):
 
             dim = len(unit_vector) // 2
@@ -140,33 +140,65 @@ class Hypersphere:
         # statevector object from qiskit.quantum_info
         statevectors = [Statevector(i) for i in statevectors]
 
-        if self.verbose: 
-            print(statevectors.draw('latex'))
-
         return statevectors, magnitudes
 
-    # next two methods generate the rgb hypersphere of radius 1 
-    # via rbf interpolation
-    def setup_rbf_interpolators(self):
+    def hypersphere(self): 
 
         pixel_values, width, height = self.get_pixels()
+        unit_vector_groups, magnitudes = self.group()
 
-        self.unit_vectors, magnitudes = self.group()
-        self.rgb_values = pixel_values
-        self.rgb_values = np.random.randint(0, 256, (len(self.unit_vectors), 3))  # Replace with actual RGB values
-        self.rbf_r = Rbf(*np.array(self.unit_vectors).T, self.rgb_values[:, 0], function='multiquadric')
-        self.rbf_g = Rbf(*np.array(self.unit_vectors).T, self.rgb_values[:, 1], function='multiquadric')
-        self.rbf_b = Rbf(*np.array(self.unit_vectors).T, self.rgb_values[:, 2], function='multiquadric')
+        self.rbf_r_list = []
+        self.rbf_g_list = []
+        self.rbf_b_list = []
 
-        return 
+        r_values = [pixel[0] for pixel in pixel_values]
+        g_values = [pixel[1] for pixel in pixel_values]
+        b_values = [pixel[2] for pixel in pixel_values]
 
-    def get_rgb_from_unit_vector(self, unit_vector):
+        # set rbf for each dimension separately
+        for i in range(2**self.n):
+            rbf_r = Rbf(*np.array(unit_vector_groups).T, r_values[i::2**self.n], function='multiquadric')
+            rbf_g = Rbf(*np.array(unit_vector_groups).T, g_values[i::2**self.n], function='multiquadric')
+            rbf_b = Rbf(*np.array(unit_vector_groups).T, b_values[i::2**self.n], function='multiquadric')
+            self.rbf_r_list.append(rbf_r)
+            self.rbf_g_list.append(rbf_g)
+            self.rbf_b_list.append(rbf_b)
 
-        r = self.rbf_r(*unit_vector)
-        g = self.rbf_g(*unit_vector)
-        b = self.rbf_b(*unit_vector)
+        return
 
-        return np.clip([r, g, b], 0, 255).astype(int)
+    def recover_pixels(self, unit_vector_groups):
+
+        # initialize hypersphere
+        self.hypersphere()
+
+        recovered_pixel_values = []
+        for j in unit_vector_groups: 
+            r_values = [self.rbf_r_list[i](*j) for i in range(2**self.n)]
+            g_values = [self.rbf_g_list[i](*j) for i in range(2**self.n)]
+            b_values = [self.rbf_b_list[i](*j) for i in range(2**self.n)]
+
+            rgb_values = np.array([np.clip([r, g, b], 0, 255).astype(int) for r, g, b in zip(r_values, g_values, b_values)])
+            recovered_pixel_values.append(rgb_values)
+
+        return recovered_pixel_values
+
+    def encrypt_image(self, unit_vector_groups, width, height, save_image_path, name): 
+
+        recovered_pixel_values = self.recover_pixels(unit_vector_groups)
+
+        final_pixels = []
+        for i in recovered_pixel_values: 
+            for j in i: 
+                final_pixels.append(j)
+        final_pixels = np.array(final_pixels).reshape(height, width, 3)
+        
+        reconstructed_image = Image.fromarray(np.uint8(final_pixels), 'RGB')
+
+        reconstructed_image.save(f'{save_image_path}{name}.png')
+
+        return
+
+
 
 
 
@@ -290,23 +322,24 @@ class Inverse_Hypersphere:
 
 
 
-#----------------------------------------------------#
+# ---------------------------------------------------- #
 
 
-
-HypersphereClass = Hypersphere(n = 6, image_path = "images/el_primo_square.jpg", verbose = True)
+"""
+HypersphereClass = Hypersphere(n = 8, image_path = "images/el_primo_square.jpg", verbose = True)
 
 pixel_values, width, height = HypersphereClass.get_pixels()
-statevectors, magnitudes = HypersphereClass.statevectors() 
+statevectors, magnitudes = HypersphereClass.generate_statevectors()
+
 
 Inverse_HypersphereClass = Inverse_Hypersphere(width = width, height = height, 
                                                statevectors = statevectors, 
                                                magnitudes = magnitudes, 
                                                name = "el_primo_rectangle", 
                                                save_image_path = "images/")
-Inverse_HypersphereClass.recover_image()
-
-
+recovered_pixel_values = Inverse_HypersphereClass.recover_pixels()
+print(len(recovered_pixel_values))
+"""
 
 
 

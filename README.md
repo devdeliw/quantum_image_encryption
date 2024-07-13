@@ -15,7 +15,16 @@ $n^2$ qubits to fully encrypt a color image. In the future I will attempt
 to reduce the qubit requirement based on the receiver's demand for
 image-quality. 
 
-I will provide specifics once the research paper is pending publication. 
+I will provide specifics once the research paper is pending publication. Here
+are some preliminary results though: 
+
+#### Original Image
+
+![](images/el_primo_square.jpg)
+
+#### Encrypted Image 
+
+![](images/el_primo_encrypted.png)
 
 
 
