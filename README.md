@@ -44,7 +44,7 @@ provide specifics later.
 If I increase the allowed qubit requirement to 771 qubits, the image gets
 encrypted in just 9.2 seconds: 
 
-#### Encrypted Image w/ 7711 qubits
+#### Encrypted Image w/ 771 qubits
 
 ![](images/el_primo_encrypted_4.png)
 
