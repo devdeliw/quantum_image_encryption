@@ -14,7 +14,7 @@ This project aims to generate a quantum algorithm that, for now, requires only
 
 $$\left( \frac{n^2}{2^m}  + 1 \right) \times (m-1)$$ 
 
-qubits to fully encrypt a color image, where $m$ is some integer. In the future I will attempt
+qubits to fully encrypt a color image, where $m$ is some integer such that $2^m$ is less than half the # $n\times n$ of pixels. In the future I will attempt
 to reduce the qubit requirement based on the receiver's demand for
 image-quality.
 
