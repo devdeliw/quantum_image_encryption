@@ -18,6 +18,8 @@ qubits to fully encrypt a color image, where $m$ is some integer. In the future 
 to reduce the qubit requirement based on the receiver's demand for
 image-quality.
 
+---
+
 I will provide specifics once the research paper is pending publication. Here
 are some preliminary results though: 
 
@@ -25,14 +27,26 @@ are some preliminary results though:
 
 ![](images/el_primo_square.jpg)
 
-#### Encrypted Image 
+#### Encrypted Image w/ 119 qubits
 
-![](images/el_primo_encrypted.png)
-
+![](images/el_primo_encrypted_8.png)
 
 Encrypting this 64x64 (4096px) image took 149.5 seconds -- quite slow. However,
 the qubit requirement was only 119 (against NEQR's 4164 qubit requirement).
 This is a vast improvement and the algorithm efficiency will only get faster.
+In addition, if you re-run the encryption algorithm, the outputted image
+changes, *while also still* storing the information of the original image,
+along with a private key and a 2^n dimensional hypersphere. Again, I will
+provide specifics later.
+
+---
+
+If I increase the allowed qubit requirement to 771 qubits, the image gets
+encrypted in just 9.2 seconds: 
+
+#### Encryptedd Image w/ 7711 qubits
+
+![](images/el_primo_encrypted_4.png)
 
 
 
