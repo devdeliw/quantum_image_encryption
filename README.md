@@ -56,6 +56,17 @@ encrypted in just 9.2 seconds:
 
 ![](images/el_primo_encrypted_4.png)
 
+Here's some more examples: 
+
+80x80
+![](images/el_primo_2_square.png)
+![](images/el_primo_2_encrypted_8.png)
+182 qubits, 230.5s 
+
+![](images/el_primo_2_encrypted_6.png)
+505 qubits, 12.0
+
+
 Thanks for checking this project out! 
 
 ---
