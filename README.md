@@ -62,9 +62,11 @@ Here's some more examples:
 
 ![](images/el_primo_2_square.png)
 
+---
+
 ![](images/el_primo_2_square_encrypted_8.png)
 
-182 qubits, 230.5s 
+182 qubits, 230.5s -- some interesting patterns emerge. 
 
 ![](images/el_primo_2_square_encrypted_6.png)
 
