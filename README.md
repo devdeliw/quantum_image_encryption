@@ -62,11 +62,11 @@ Here's some more examples:
 
 ![](images/el_primo_2_square.png)
 
-![](images/el_primo_2_encrypted_8.png)
+![](images/el_primo_2_square_encrypted_8.png)
 
 182 qubits, 230.5s 
 
-![](images/el_primo_2_encrypted_6.png)
+![](images/el_primo_2_square_encrypted_6.png)
 
 505 qubits, 12.0
 
