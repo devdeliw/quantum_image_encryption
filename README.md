@@ -52,6 +52,17 @@ provide specifics later.
 If I increase the allowed qubit requirement to 771 qubits, the image gets
 encrypted in just 9.2 seconds: 
 
+## Final Boss - 256 x 256 image
+
+Initial Image: 
+
+![](images/el_primo_skin.png)
+
+![](images/el_primo_skin_encrypted_8.png) 
+
+Took 3900 seconds. 
+
+
 #### Encrypted Image w/ 771 qubits
 
 ![](images/el_primo_encrypted_4.png)
