@@ -62,7 +62,6 @@ Here's some more examples:
 
 ![](images/el_primo_2_square.png)
 
----
 
 ![](images/el_primo_2_square_encrypted_8.png)
 
@@ -70,7 +69,7 @@ Here's some more examples:
 
 ![](images/el_primo_2_square_encrypted_6.png)
 
-505 qubits, 12.0
+505 qubits, 12.5s
 
 ---
 
