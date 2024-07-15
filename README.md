@@ -4,7 +4,7 @@ The goal of this project is to generate an image encryption algorithm that
 efficiently and effectively encodes digital image information in a secure way. 
 
 The current novel quantum-digital-image representation is known as the "Novel
-Enhanced Quantum Representation
+Enhanced Quantum Representation"
 ([NEQR](https://link.springer.com/article/10.1007/s11128-013-0567-z_)) of digital images which uses the basis state of a qubit sequence to store the gray-scale value of each pixel in the image. There are a few other methods as well, but they are all incredibly similar and only have distinctions in how they prepare the qubits.
 
 This project aims to generate a quantum algorithm that, for now, requires 
