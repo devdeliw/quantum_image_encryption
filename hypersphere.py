@@ -185,6 +185,8 @@ class Hypersphere:
     def encrypt_image(self, unit_vector_groups, width, height, save_image_path, name): 
 
         recovered_pixel_values = self.recover_pixels(unit_vector_groups)
+        num_pixels = width * height
+        num_qubits = int((num_pixels / (2**self.n) + 1) * (self.n - 1))
 
         final_pixels = []
         for i in recovered_pixel_values: 
@@ -194,7 +196,7 @@ class Hypersphere:
         
         reconstructed_image = Image.fromarray(np.uint8(final_pixels), 'RGB')
 
-        reconstructed_image.save(f'{save_image_path}{name}.png')
+        reconstructed_image.save(f'{save_image_path}{name}-{num_qubits}_qubits.png')
 
         return
 

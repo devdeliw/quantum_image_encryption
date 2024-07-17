@@ -28,8 +28,35 @@ be in the future.
 
 ---
 
-I will provide specifics about how the algorithm works once the research paper is pending publication. 
-Here are some preliminary results though: 
+The Algorithm roughly performs the following sequence of steps: 
+
+- Extract the pixel information from an image and convert $2^n$ pixels (top
+  left to bottom right)
+  reversibly into an $n$-dimensional statevector. 
+- Generate a $2^n$ dimensional hypersphere, where each $2^n$ dimensional unit
+  vector points to a set of $2^n$ pixel's $(R,G,B)$ information
+- Group sequences of $n$-dimensional statevectors; run them all through
+  randomized gates of large depth and afterwards generate mixed state density
+  matrix as a linear combination of the resulting statevectors post-circuit
+  within each original sequence 
+  - I use IBM's statevector simulator backend as there exists no real backend
+    to handle this project's qubit requirement
+  - I generate the coefficients in the linear combination by calculating the 
+    fidelity (matrix "distance" in the $2^n$ dimensional hilbert space) with an
+    randomly generated density matrix
+- Spectral decomposition is then performed on the resulting mixed density
+  matrices to extract possible pure state eigenvectors along with their
+  corresponding probability eigenvalues 
+- The Von Neumann Entropy of each mixed density matrix is calculated based on
+  the probability eigenvalues of each matrix
+- The mixed density matrix eigenvectors order is altered based on decreasing entropy
+- I convert all the eigenvectors back into $2^n$ dimensional unit-vectors and
+  extract their corresponding RGB information 
+- Generate the encrypted image using the RGB information
+
+
+This whole process is reversible. Here's some examples: 
+
 
 #### Original Image
 
@@ -37,7 +64,11 @@ Here are some preliminary results though:
 
 #### Encrypted Image w/ 119 qubits
 
-![](images/el_primo_encrypted_8.png)
+![](images/encrypted/el_primo_square-119_qubits.png)
+
+#### Decrypted Image
+
+![](images/decrypted/el_primo_square_119_decrypted.png)
 
 Encrypting this 64x64 (4096px) image took 149.5 seconds -- quite slow. The
 corresponding qubit requirement is 119.
@@ -54,7 +85,7 @@ encrypted in just 9.2 seconds:
 
 #### Encrypted Image w/ 771 qubits
 
-![](images/el_primo_encrypted_4.png)
+![](images/encrypted/el_primo_square-771_qubits.png)
 
 Here's some more examples: 
 
@@ -63,11 +94,11 @@ Here's some more examples:
 ![](images/el_primo_2_square.png)
 
 
-![](images/el_primo_2_square_encrypted_8.png)
+![](images/encrypted/el_primo_2_square-182_qubits.png)
 
 182 qubits, 230.5s -- some interesting patterns emerge. 
 
-![](images/el_primo_2_square_encrypted_6.png)
+![](images/encrypted/el_primo_2_square-505_qubits.png)
 
 505 qubits, 12.5s
 
@@ -79,9 +110,18 @@ Initial Image:
 
 ![](images/el_primo_skin.png)
 
-![](images/el_primo_skin_encrypted_8.png)
+#### Encrypted Image
 
-Took 3900 seconds.
+![](images/encrypted/el_primo_skin-1799_qubits.png)
+
+Took 3900 seconds to encrypt using 1799 qubits. 
+
+#### Decrypted Image
+
+![](images/decrypted/el_primo_skin_1799_decrypted.png)
+
+Took 3670 seconds. 
+
 
 
 Thanks for checking this project out! 

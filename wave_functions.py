@@ -78,7 +78,7 @@ class Scramble_WaveFunctions:
 
         for i in range(len(wave_functions)):
             group = []
-            for j in range(n):
+            for j in range(self.n):
                 group.append(wave_functions[(i + j) % len(wave_functions)])
             groups.append(group)
 
@@ -96,7 +96,6 @@ class Scramble_WaveFunctions:
         simulator = Aer.get_backend('statevector_simulator')
         final_wave_functions = []
 
-        # cyclic permutation of a list
         def run(wave_func, i):
 
             result_wf = []
@@ -128,6 +127,7 @@ class Scramble_WaveFunctions:
             ancillary_wave_functions = []
 
             for j in wave_functions: 
+                print(j)
                 ancillary_wave_functions.append(run(j, i))
             
             final_wave_functions.append(ancillary_wave_functions)
@@ -209,6 +209,8 @@ class Scramble_WaveFunctions:
                 coupled_weights.append(fidelity / total)
 
             weights.append(coupled_weights)
+
+        print(weights)
 
         mixed_density_matrices = []
 
@@ -343,12 +345,12 @@ class Scramble_WaveFunctions:
 
 
 
-
-image_path = "/Users/devaldeliwala/quantum_image_encryption/images/el_primo_square.jpg"
+"""
+image_path = "/Users/devaldeliwala/quantum_image_encryption/images/el_primo_skin.png"
 save_image_path = "/Users/devaldeliwala/quantum_image_encryption/images/"
-n = 8 
+n = 8
 depth = 10
-encrypted_name = "el_primo_encrypted"
+encrypted_name = "el_primo_skin_encrypted"
 verbose = False
 
 class_ = Scramble_WaveFunctions(image_path = image_path, 
@@ -359,6 +361,7 @@ class_ = Scramble_WaveFunctions(image_path = image_path,
                                verbose = verbose)
 
 class_.encrypted_image()
+"""
 
 
 
