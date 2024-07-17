@@ -102,6 +102,10 @@ Here's some more examples:
 
 505 qubits, 12.5s
 
+#### Decrypted Image
+
+![](images/decrypted/el_primo_2_square_505_decrypted.png)
+
 ---
 
 ## Final Boss - 256 x 256 image
