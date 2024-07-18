@@ -127,6 +127,7 @@ Took 3900 seconds to encrypt using 1799 qubits.
 Took 3670 seconds. 
 
 Original 256x256 Image Size: 5KB
+
 Encrypted 256x256 Image Size: 87KB
 
 Thanks for checking this project out! 
